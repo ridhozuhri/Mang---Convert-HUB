@@ -1,6 +1,6 @@
 # MANG-CONVERT (ConvertHub)
 
-Platform konversi asset (Curency) dengan flow transaksi manual oleh admin.
+Platform konversi asset (Currency) dengan flow transaksi manual oleh admin.
 
 ## Fitur Utama
 
@@ -49,9 +49,6 @@ Platform konversi asset (Curency) dengan flow transaksi manual oleh admin.
    - `http://localhost:8080/admin` (dashboard admin)
 
 ## Akun Default (Seeder)
-
-- Email: `admin@converthub.com`
-- Password: `Admin123!`
 
 > Ganti password setelah login pertama.
 
