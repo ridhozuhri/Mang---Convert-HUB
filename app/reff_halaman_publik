@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvertHub — Converter Aset Modern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+/* ─── macOS Design Tokens ─────────────────────────────────── */
+:root {
+  --bg:            #f5f5f7;
+  --bg-elevated:   #ffffff;
+  --bg-panel:      rgba(255,255,255,0.82);
+  --bg-input:      rgba(255,255,255,0.95);
+  --bg-sidebar:    rgba(248,248,250,0.95);
+  --bg-hover:      rgba(0,0,0,0.04);
+  --bg-active:     rgba(0,122,255,0.10);
+
+  --border:        rgba(0,0,0,0.10);
+  --border-strong: rgba(0,0,0,0.16);
+  --border-focus:  rgba(0,122,255,0.60);
+
+  --text-primary:  #1d1d1f;
+  --text-secondary:#6e6e73;
+  --text-tertiary: #9a9a9e;
+  --text-white:    #ffffff;
+
+  --accent:        #007aff;
+  --accent-hover:  #0063cc;
+  --accent-light:  rgba(0,122,255,0.10);
+  --accent-mid:    rgba(0,122,255,0.20);
+
+  --green:         #34c759;
+  --orange:        #ff9500;
+  --red:           #ff3b30;
+  --purple:        #af52de;
+  --teal:          #5ac8fa;
+
+  --font-ui:   'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'DM Mono', 'SF Mono', monospace;
+
+  --radius-xs:  6px;
+  --radius-sm:  10px;
+  --radius-md:  14px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-lg:  0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-xl:  0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08);
+
+  --blur:       blur(20px) saturate(1.8);
+}
+
+/* ─── Body ────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Background mesh ─────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(0,122,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 500px at 80% 80%, rgba(175,82,222,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 400px at 60% 30%, rgba(52,199,89,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Navbar ──────────────────────────────────────────────── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-panel);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.nav-logo-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,122,255,0.35);
+}
+.nav-logo-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.05);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+}
+.nav-tab {
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: none;
+  background: none;
+}
+.nav-tab:hover { color: var(--text-primary); background: rgba(0,0,0,0.05); }
+.nav-tab.active {
+  background: white;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ghost {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.18s;
+  border: none;
+  background: none;
+  font-family: var(--font-ui);
+}
+.btn-ghost:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+.btn-primary {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-ui);
+  transition: all 0.18s;
+  box-shadow: 0 1px 3px rgba(0,122,255,0.3);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(0,122,255,0.4);
+  transform: translateY(-1px);
+}
+.btn-primary:active { transform: translateY(0); }
+
+/* ─── Hero ────────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 60px 24px 40px;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent-mid);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 20px;
+  animation: fadeUp 0.5s ease both;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.8); }
+}
+.hero h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, #007aff, #5ac8fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+  font-weight: 400;
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Stats Bar ───────────────────────────────────────────── */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  animation: fadeUp 0.5s 0.3s ease both;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.stat-num {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+  align-self: center;
+}
+
+/* ─── Category Tabs ───────────────────────────────────────── */
+.category-bar {
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 28px;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.5s 0.35s ease both;
+}
+.category-scroll {
+  display: flex;
+  gap: 6px;
+  background: var(--bg-elevated);
+  padding: 5px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+.category-scroll::-webkit-scrollbar { display: none; }
+.cat-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  font-family: var(--font-ui);
+}
+.cat-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.cat-tab.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+}
+.cat-tab .cat-emoji { font-size: 14px; }
+
+/* ─── Main Converter Card ─────────────────────────────────── */
+.converter-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.5s 0.4s ease both;
+}
+
+.converter-card {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ─── Converter Grid ──────────────────────────────────────── */
+.converter-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+}
+
+/* ─── Panel ───────────────────────────────────────────────── */
+.panel {
+  padding: 28px 28px 24px;
+}
+.panel-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-label-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ─── Asset Selector ──────────────────────────────────────── */
+.asset-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-sidebar);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+  margin-bottom: 14px;
+  position: relative;
+}
+.asset-selector:hover {
+  border-color: var(--border-strong);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+.asset-logo {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  position: relative;
+}
+.asset-logo.usdt { background: linear-gradient(135deg, #26a17b, #1a8064); }
+.asset-logo.btc  { background: linear-gradient(135deg, #f7931a, #e8841a); }
+.asset-logo.usd  { background: linear-gradient(135deg, #2c7a4b, #1e5c38); }
+.asset-logo.idr  { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+.asset-logo.bca  { background: linear-gradient(135deg, #005faf, #003d73); }
+.asset-logo.eth  { background: linear-gradient(135deg, #627eea, #4c63c7); }
+
+.asset-logo-img { color: white; font-weight: 700; font-size: 11px; font-family: var(--font-mono); }
+.asset-info { flex: 1; min-width: 0; }
+.asset-code {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.asset-name {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asset-chevron {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* ─── Amount Input ────────────────────────────────────────── */
+.amount-wrap {
+  background: var(--bg-sidebar);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  transition: all 0.18s;
+}
+.amount-wrap:focus-within {
+  border-color: var(--border-focus);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.10);
+}
+.amount-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.amount-label-text {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+.amount-balance {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.amount-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.amount-input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  outline: none;
+  width: 100%;
+  letter-spacing: -0.5px;
+}
+.amount-input::placeholder { color: var(--text-tertiary); }
+.amount-suffix {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+.amount-quick {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.quick-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid var(--accent-mid);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+.quick-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ─── Swap Divider ────────────────────────────────────────── */
+.swap-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 4px;
+  position: relative;
+}
+.swap-divider::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--border);
+}
+.swap-btn {
+  width: 40px; height: 40px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--shadow-sm);
+  font-size: 16px;
+}
+.swap-btn:hover {
+  border-color: var(--accent);
+  transform: rotate(180deg) scale(1.1);
+  box-shadow: 0 2px 12px rgba(0,122,255,0.25);
+}
+
+/* ─── Receive Panel ───────────────────────────────────────── */
+.receive-panel {
+  background: linear-gradient(160deg, rgba(0,122,255,0.025) 0%, transparent 60%);
+}
+
+.asset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 180px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  margin-bottom: 14px;
+}
+.asset-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1.5px solid transparent;
+}
+.asset-list-item:hover { background: var(--bg-hover); }
+.asset-list-item.selected {
+  background: var(--accent-light);
+  border-color: var(--accent-mid);
+}
+.asset-list-logo {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: white;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+.list-asset-info { flex: 1; }
+.list-asset-code { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.list-asset-name { font-size: 11px; color: var(--text-tertiary); }
+.list-asset-rate { font-size: 12px; font-family: var(--font-mono); color: var(--text-secondary); font-weight: 500; }
+
+.receive-amount-box {
+  background: var(--bg-sidebar);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.receive-amount-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  opacity: 0.6;
+}
+.receive-label { font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px; }
+.receive-value {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.receive-value.loading { color: var(--text-tertiary); }
+.receive-usd-equiv {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+
+/* ─── Summary Panel ───────────────────────────────────────── */
+.summary-panel {
+  background: var(--bg-sidebar);
+  border-top: 1px solid var(--border);
+  padding: 20px 28px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.summary-item {}
+.summary-item-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.summary-item-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.summary-item-value.green { color: var(--green); }
+.summary-item-value.orange { color: var(--orange); }
+
+.summary-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(0,122,255,0.06);
+  border: 1px solid rgba(0,122,255,0.15);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.summary-note .note-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 2px;
+  width: 62%;
+  position: relative;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-40px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(40px); opacity: 0; }
+}
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+}
+
+/* ─── CTA Button ──────────────────────────────────────────── */
+.cta-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn-cta {
+  flex: 1;
+  padding: 13px 20px;
+  background: var(--accent);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 12px rgba(0,122,255,0.35);
+  letter-spacing: -0.2px;
+}
+.btn-cta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,122,255,0.4);
+}
+.btn-cta:active { transform: translateY(0); }
+.btn-cta-icon { font-size: 16px; }
+
+.btn-save {
+  width: 46px; height: 46px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.18s;
+  box-shadow: var(--shadow-sm);
+}
+.btn-save:hover {
+  border-color: var(--orange);
+  transform: scale(1.05);
+}
+
+.login-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 10px;
+}
+.login-note a { color: var(--accent); text-decoration: none; font-weight: 500; }
+
+/* ─── Rate Ticker ─────────────────────────────────────────── */
+.rate-ticker {
+  max-width: 960px;
+  margin: 0 auto 24px;
+  padding: 0 16px;
+  animation: fadeUp 0.5s 0.45s ease both;
+  position: relative;
+  z-index: 1;
+}
+.ticker-inner {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ticker-inner::-webkit-scrollbar { display: none; }
+.ticker-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  margin-right: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ticker-divider {
+  width: 1px; height: 24px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ticker-pair {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.ticker-rate {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.ticker-change {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+.ticker-change.up   { background: rgba(52,199,89,0.12); color: var(--green); }
+.ticker-change.down { background: rgba(255,59,48,0.10); color: var(--red); }
+
+/* ─── Feature Pills ───────────────────────────────────────── */
+.feature-pills {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.5s 0.5s ease both;
+}
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.18s;
+}
+.pill:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.pill-icon { font-size: 15px; }
+
+/* ─── Recent Transactions ─────────────────────────────────── */
+.recent-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.5s 0.55s ease both;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+.section-link {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.section-link:hover { opacity: 0.7; }
+
+.tx-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tx-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.tx-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+}
+.tx-icon {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.tx-icon.completed { background: rgba(52,199,89,0.12); }
+.tx-icon.pending   { background: rgba(255,149,0,0.12); }
+.tx-icon.processing { background: rgba(0,122,255,0.10); }
+
+.tx-info { flex: 1; min-width: 0; }
+.tx-pair {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  letter-spacing: -0.3px;
+}
+.tx-date { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+.tx-amount { text-align: right; flex-shrink: 0; }
+.tx-sent {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.tx-received {
+  font-size: 11px;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.tx-status {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.tx-status.completed { background: rgba(52,199,89,0.12); color: var(--green); }
+.tx-status.pending   { background: rgba(255,149,0,0.12); color: var(--orange); }
+.tx-status.processing { background: rgba(0,122,255,0.10); color: var(--accent); }
+
+/* ─── Footer ──────────────────────────────────────────────── */
+footer {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
+  position: relative;
+  z-index: 1;
+}
+.footer-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+.footer-link {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer-link:hover { color: var(--text-primary); }
+.footer-copy {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ─── Dropdown Asset ──────────────────────────────────────── */
+.dropdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.dropdown-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.dropdown-sheet {
+  background: white;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 70vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(30px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-xl);
+}
+.dropdown-overlay.open .dropdown-sheet {
+  transform: translateY(0);
+}
+.dropdown-handle {
+  width: 36px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 10px auto 0;
+  flex-shrink: 0;
+}
+.dropdown-title {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 20px 10px;
+  letter-spacing: -0.3px;
+}
+.dropdown-search {
+  margin: 0 16px 12px;
+  background: var(--bg-sidebar);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.18s;
+}
+.dropdown-search:focus { border-color: var(--border-focus); }
+.dropdown-list {
+  overflow-y: auto;
+  padding: 0 8px 16px;
+  scrollbar-width: thin;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dropdown-item:hover { background: var(--bg-hover); }
+.dropdown-item.selected { background: var(--accent-light); }
+.dropdown-item-logo {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+.dropdown-item-info { flex: 1; }
+.dropdown-item-code { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.dropdown-item-name { font-size: 12px; color: var(--text-tertiary); }
+.dropdown-item-check { font-size: 16px; color: var(--accent); }
+
+/* ─── Toast ───────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text-primary);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-xl);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .nav-center { display: none; }
+  .hero { padding: 40px 20px 28px; }
+  .hero h1 { font-size: 28px; letter-spacing: -0.8px; }
+  .hero p { font-size: 14px; }
+  .stats-bar { gap: 20px; }
+  .stat-divider { display: none; }
+
+  .converter-grid {
+    grid-template-columns: 1fr;
+  }
+  .swap-divider {
+    flex-direction: row;
+    padding: 4px 28px;
+  }
+  .swap-divider::before {
+    top: 50%; bottom: auto;
+    left: 0; right: 0;
+    width: auto;
+    height: 1px;
+  }
+
+  .panel { padding: 20px 18px 16px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .summary-panel { padding: 16px 18px; }
+
+  .tx-item { gap: 10px; padding: 12px 14px; }
+  .tx-status { display: none; }
+
+  .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-links { flex-wrap: wrap; gap: 14px; }
+
+  .receive-panel { border-top: 1px solid var(--border); }
+}
+
+@media (min-width: 769px) {
+  .panel-left  { border-right: 1px solid var(--border); }
+  .panel-right { border-left: 1px solid var(--border); }
+}
+
+/* ─── Loading Skeleton ────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-sidebar) 25%, rgba(0,0,0,0.04) 50%, var(--bg-sidebar) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.5s infinite;
+  border-radius: 6px;
+}
+@keyframes skeleton-wave {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">⇄</div>
+    <span class="nav-logo-text">ConvertHub</span>
+  </a>
+  <div class="nav-center">
+    <button class="nav-tab active">Converter</button>
+    <button class="nav-tab">Rates</button>
+    <button class="nav-tab">Riwayat</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="showToast('🔔', 'Fitur notifikasi segera hadir')">Notifikasi</button>
+    <button class="btn-primary" onclick="showToast('👋', 'Redirecting ke halaman login...')">Masuk</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Rate diupdate real-time oleh admin
+  </div>
+  <h1>Tukar Aset dengan<br><span>Cepat & Transparan</span></h1>
+  <p>Platform konversi modern untuk USDT, BTC, USD, IDR, dan pulsa — rate jelas, proses cepat, tanpa biaya tersembunyi.</p>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num">Rp 4,2M</span>
+    <span class="stat-label">Volume Hari Ini</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-item">
+    <span class="stat-num">247</span>
+    <span class="stat-label">Transaksi</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-item">
+    <span class="stat-num">18</span>
+    <span class="stat-label">Pasangan Aktif</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-item">
+    <span class="stat-num">~15 mnt</span>
+    <span class="stat-label">Estimasi Proses</span>
+  </div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="category-bar">
+  <div class="category-scroll">
+    <button class="cat-tab active" onclick="selectCat(this)"><span class="cat-emoji">✦</span> Semua</button>
+    <button class="cat-tab" onclick="selectCat(this)"><span class="cat-emoji">💵</span> USD</button>
+    <button class="cat-tab" onclick="selectCat(this)"><span class="cat-emoji">🪙</span> Coin</button>
+    <button class="cat-tab" onclick="selectCat(this)"><span class="cat-emoji">🏦</span> Bank</button>
+    <button class="cat-tab" onclick="selectCat(this)"><span class="cat-emoji">📱</span> Pulsa</button>
+    <button class="cat-tab" onclick="selectCat(this)"><span class="cat-emoji">🔒</span> Stable</button>
+  </div>
+</div>
+
+<!-- RATE TICKER -->
+<div class="rate-ticker">
+  <div class="ticker-inner">
+    <span class="ticker-label">
+      <span class="dot" style="width:5px;height:5px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>
+      Live
+    </span>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-pair">USDT/IDR</span>
+      <span class="ticker-rate">16,100</span>
+      <span class="ticker-change up">+0.31%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-pair">USD/IDR</span>
+      <span class="ticker-rate">16,050</span>
+      <span class="ticker-change up">+0.12%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-pair">BTC/IDR</span>
+      <span class="ticker-rate">980,000,000</span>
+      <span class="ticker-change down">−1.24%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-pair">ETH/IDR</span>
+      <span class="ticker-rate">50,200,000</span>
+      <span class="ticker-change up">+2.08%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-pair">BCA/IDR</span>
+      <span class="ticker-rate">1:1</span>
+      <span class="ticker-change up">Stabil</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONVERTER CARD -->
+<div class="converter-wrap">
+  <div class="converter-card">
+    <div class="converter-grid">
+
+      <!-- PANEL KIRI: KIRIM -->
+      <div class="panel panel-left">
+        <div class="panel-label">
+          <span class="panel-label-dot" style="background:var(--orange)"></span>
+          Kamu Kirim
+        </div>
+
+        <div class="asset-selector" onclick="openDropdown('from')">
+          <div class="asset-logo usdt">
+            <span class="asset-logo-img">₮</span>
+          </div>
+          <div class="asset-info">
+            <div class="asset-code">USDT <span style="font-size:11px;color:var(--text-tertiary);font-weight:400">(TRC-20)</span></div>
+            <div class="asset-name">Tether USD • Stable</div>
+          </div>
+          <span class="asset-chevron">▾</span>
+        </div>
+
+        <div class="amount-wrap">
+          <div class="amount-label-row">
+            <span class="amount-label-text">Jumlah</span>
+            <span class="amount-balance">Saldo: —</span>
+          </div>
+          <div class="amount-input-row">
+            <input
+              class="amount-input"
+              type="number"
+              id="amountInput"
+              placeholder="0"
+              value="100"
+              oninput="recalculate()"
+            >
+            <span class="amount-suffix">USDT</span>
+          </div>
+          <div class="amount-quick">
+            <button class="quick-btn" onclick="setAmount(50)">50</button>
+            <button class="quick-btn" onclick="setAmount(100)">100</button>
+            <button class="quick-btn" onclick="setAmount(500)">500</button>
+            <button class="quick-btn" onclick="setAmount(1000)">1K</button>
+            <button class="quick-btn" onclick="setAmount(5000)">5K</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SWAP BUTTON -->
+      <div class="swap-divider">
+        <button class="swap-btn" onclick="swapPair()" title="Tukar pasangan">⇄</button>
+      </div>
+
+      <!-- PANEL KANAN: TERIMA -->
+      <div class="panel panel-right receive-panel">
+        <div class="panel-label">
+          <span class="panel-label-dot" style="background:var(--green)"></span>
+          Kamu Terima
+        </div>
+
+        <div class="asset-list" id="assetList">
+          <div class="asset-list-item selected" onclick="selectAsset(this, 'IDR', 'idr', 'Rp')">
+            <div class="asset-list-logo" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">Rp</div>
+            <div class="list-asset-info">
+              <div class="list-asset-code">IDR</div>
+              <div class="list-asset-name">Indonesian Rupiah</div>
+            </div>
+            <div class="list-asset-rate">16,100</div>
+          </div>
+          <div class="asset-list-item" onclick="selectAsset(this, 'BCA', 'bca', 'BCA')">
+            <div class="asset-list-logo" style="background:linear-gradient(135deg,#005faf,#003d73)">BCA</div>
+            <div class="list-asset-info">
+              <div class="list-asset-code">BCA IDR</div>
+              <div class="list-asset-name">Transfer Bank BCA</div>
+            </div>
+            <div class="list-asset-rate">16,050</div>
+          </div>
+          <div class="asset-list-item" onclick="selectAsset(this, 'USD', 'usd', '$')">
+            <div class="asset-list-logo" style="background:linear-gradient(135deg,#2c7a4b,#1e5c38)">$</div>
+            <div class="list-asset-info">
+              <div class="list-asset-code">USD</div>
+              <div class="list-asset-name">US Dollar</div>
+            </div>
+            <div class="list-asset-rate">0.99</div>
+          </div>
+          <div class="asset-list-item" onclick="selectAsset(this, 'BTC', 'btc', '₿')">
+            <div class="asset-list-logo" style="background:linear-gradient(135deg,#f7931a,#e8841a)">₿</div>
+            <div class="list-asset-info">
+              <div class="list-asset-code">BTC</div>
+              <div class="list-asset-name">Bitcoin</div>
+            </div>
+            <div class="list-asset-rate">0.00001637</div>
+          </div>
+        </div>
+
+        <div class="receive-amount-box">
+          <div class="receive-label">Estimasi diterima</div>
+          <div class="receive-value" id="receiveValue">1,601,950</div>
+          <div class="receive-usd-equiv" id="receiveEquiv">≈ $99.50 USD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY PANEL -->
+    <div class="summary-panel">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-item-label">Rate</div>
+          <div class="summary-item-value" id="summaryRate">16,100</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">Fee</div>
+          <div class="summary-item-value orange" id="summaryFee">0.50 USDT</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">Min</div>
+          <div class="summary-item-value" id="summaryMin">10 USDT</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">Maks</div>
+          <div class="summary-item-value" id="summaryMax">50,000 USDT</div>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-labels">
+        <span>Min 10</span>
+        <span id="progressLabel">100 / 50,000 USDT</span>
+        <span>Max 50,000</span>
+      </div>
+
+      <div class="summary-note">
+        <span class="note-icon">ℹ️</span>
+        <span>Transfer ke rekening BCA/Mandiri/BNI. Proses <strong>1–3 jam kerja</strong>. Konfirmasi via WhatsApp setelah upload bukti bayar.</span>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn-cta" onclick="showToast('🔐', 'Silakan login untuk membuat order')">
+          <span class="btn-cta-icon">⇄</span>
+          Buat Order Sekarang
+        </button>
+        <button class="btn-save" onclick="showToast('⭐', 'Pair disimpan ke favorit')" title="Simpan ke favorit">☆</button>
+      </div>
+      <div class="login-note">Sudah punya akun? <a href="#" onclick="showToast('👋','Redirecting ke login...');return false">Masuk</a> — atau <a href="#" onclick="showToast('📝','Redirecting ke register...');return false">Daftar gratis</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE PILLS -->
+<div class="feature-pills">
+  <div class="pill"><span class="pill-icon">⚡</span> Kalkulasi Instan</div>
+  <div class="pill"><span class="pill-icon">🔒</span> Transaksi Aman</div>
+  <div class="pill"><span class="pill-icon">📊</span> Rate Transparan</div>
+  <div class="pill"><span class="pill-icon">🕐</span> Proses 1–4 Jam</div>
+  <div class="pill"><span class="pill-icon">📱</span> Mobile Friendly</div>
+  <div class="pill"><span class="pill-icon">🎯</span> Tanpa Biaya Tersembunyi</div>
+</div>
+
+<!-- RECENT TRANSACTIONS (Demo) -->
+<div class="recent-section">
+  <div class="section-header">
+    <span class="section-title">Transaksi Terkini</span>
+    <a href="#" class="section-link" onclick="showToast('🔐','Login untuk lihat riwayat');return false">Lihat semua →</a>
+  </div>
+  <div class="tx-list">
+    <div class="tx-item">
+      <div class="tx-icon completed">✓</div>
+      <div class="tx-info">
+        <div class="tx-pair">USDT → IDR</div>
+        <div class="tx-date">Hari ini, 10:24 — CH-20250122-A3F9B2</div>
+      </div>
+      <div class="tx-amount">
+        <div class="tx-sent">500 USDT</div>
+        <div class="tx-received">+8,009,750 IDR</div>
+      </div>
+      <div class="tx-status completed">Selesai</div>
+    </div>
+    <div class="tx-item">
+      <div class="tx-icon processing">↻</div>
+      <div class="tx-info">
+        <div class="tx-pair">BTC → IDR</div>
+        <div class="tx-date">Hari ini, 09:11 — CH-20250122-C7D2E1</div>
+      </div>
+      <div class="tx-amount">
+        <div class="tx-sent">0.005 BTC</div>
+        <div class="tx-received">+4,851,000 IDR</div>
+      </div>
+      <div class="tx-status processing">Diproses</div>
+    </div>
+    <div class="tx-item">
+      <div class="tx-icon pending">◎</div>
+      <div class="tx-info">
+        <div class="tx-pair">USD → IDR</div>
+        <div class="tx-date">Kemarin, 16:45 — CH-20250121-F4B8A0</div>
+      </div>
+      <div class="tx-amount">
+        <div class="tx-sent">200 USD</div>
+        <div class="tx-received">+3,205,000 IDR</div>
+      </div>
+      <div class="tx-status pending">Menunggu</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo-icon" style="width:22px;height:22px;font-size:11px">⇄</div>
+      ConvertHub
+    </div>
+    <div class="footer-links">
+      <a href="#" class="footer-link">Syarat & Ketentuan</a>
+      <a href="#" class="footer-link">Kebijakan Privasi</a>
+      <a href="#" class="footer-link">FAQ</a>
+      <a href="#" class="footer-link">Kontak</a>
+      <a href="#" class="footer-link">Status</a>
+    </div>
+    <span class="footer-copy">© 2025 ConvertHub</span>
+  </div>
+</footer>
+
+<!-- DROPDOWN OVERLAY -->
+<div class="dropdown-overlay" id="dropdownOverlay" onclick="closeDropdown(event)">
+  <div class="dropdown-sheet" onclick="event.stopPropagation()">
+    <div class="dropdown-handle"></div>
+    <div class="dropdown-title" id="dropdownTitle">Pilih Aset</div>
+    <input type="text" class="dropdown-search" placeholder="Cari aset... (USDT, BTC, IDR)" id="dropdownSearch" oninput="filterDropdown(this.value)">
+    <div class="dropdown-list" id="dropdownList"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✓</span>
+  <span id="toastMsg">Berhasil</span>
+</div>
+
+<script>
+/* ─── State ───────────────────────────────────────────────── */
+const pairs = {
+  'USDT_IDR': { rate: 16100, fee: 0.5, feeType: 'percent', min: 10, max: 50000, rounding: 'floor', precision: 0 },
+  'USDT_BCA': { rate: 16050, fee: 0.5, feeType: 'percent', min: 10, max: 50000, rounding: 'floor', precision: 0 },
+  'USDT_USD': { rate: 0.998, fee: 0.3, feeType: 'percent', min: 10, max: 10000, rounding: 'floor', precision: 2 },
+  'USDT_BTC': { rate: 0.0000163, fee: 1, feeType: 'percent', min: 10, max: 100000, rounding: 'floor', precision: 8 },
+};
+
+const assets = [
+  { code: 'USDT', name: 'Tether USD', symbol: '₮', color: 'linear-gradient(135deg,#26a17b,#1a8064)', cat: 'stable' },
+  { code: 'BTC',  name: 'Bitcoin',    symbol: '₿', color: 'linear-gradient(135deg,#f7931a,#e8841a)', cat: 'coin' },
+  { code: 'ETH',  name: 'Ethereum',   symbol: 'Ξ', color: 'linear-gradient(135deg,#627eea,#4c63c7)', cat: 'coin' },
+  { code: 'USD',  name: 'US Dollar',  symbol: '$', color: 'linear-gradient(135deg,#2c7a4b,#1e5c38)', cat: 'usd' },
+  { code: 'IDR',  name: 'Rupiah',     symbol: 'Rp', color: 'linear-gradient(135deg,#dc2626,#b91c1c)', cat: 'bank' },
+  { code: 'BCA',  name: 'Bank BCA',   symbol: 'BCA', color: 'linear-gradient(135deg,#005faf,#003d73)', cat: 'bank' },
+  { code: 'GOPAY',name: 'GoPay',      symbol: 'GP', color: 'linear-gradient(135deg,#00aa5b,#007a41)', cat: 'bank' },
+  { code: 'TSEL', name: 'Pulsa Telkomsel', symbol: 'T', color: 'linear-gradient(135deg,#ff0000,#cc0000)', cat: 'pulsa' },
+];
+
+let state = { from: 'USDT', to: 'IDR', amount: 100 };
+let dropdownTarget = 'from';
+let toastTimer = null;
+
+/* ─── Kalkulasi ───────────────────────────────────────────── */
+function getPair(from, to) {
+  return pairs[`${from}_${to}`] || null;
+}
+
+function formatNum(n, decimals = 0) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  return new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: Math.max(decimals, 8)
+  }).format(n);
+}
+
+function recalculate() {
+  const rawAmount = parseFloat(document.getElementById('amountInput').value) || 0;
+  state.amount = rawAmount;
+  const pair = getPair(state.from, state.to);
+
+  const rv  = document.getElementById('receiveValue');
+  const re  = document.getElementById('receiveEquiv');
+  const sr  = document.getElementById('summaryRate');
+  const sf  = document.getElementById('summaryFee');
+  const smin = document.getElementById('summaryMin');
+  const smax = document.getElementById('summaryMax');
+  const pb  = document.getElementById('progressBar');
+  const pl  = document.getElementById('progressLabel');
+
+  if (!pair || rawAmount <= 0) {
+    rv.textContent = '0';
+    re.textContent = '';
+    return;
+  }
+
+  // Warning
+  if (rawAmount < pair.min) {
+    rv.textContent = '⚠ Min ' + formatNum(pair.min) + ' ' + state.from;
+    rv.className = 'receive-value loading';
+    re.textContent = 'Jumlah terlalu kecil';
+    return;
+  }
+  if (pair.max > 0 && rawAmount > pair.max) {
+    rv.textContent = '⚠ Maks ' + formatNum(pair.max) + ' ' + state.from;
+    rv.className = 'receive-value loading';
+    re.textContent = 'Jumlah melebihi batas';
+    return;
+  }
+
+  const gross = rawAmount * pair.rate;
+  const fee   = pair.feeType === 'percent'
+    ? rawAmount * (pair.fee / 100)
+    : pair.fee;
+  const feeIDR = fee * pair.rate;
+  const net = gross - feeIDR;
+  const rounded = pair.precision === 0
+    ? Math.floor(net)
+    : parseFloat(net.toFixed(pair.precision));
+
+  rv.textContent = formatNum(rounded, pair.precision);
+  rv.className = 'receive-value';
+  re.textContent = '≈ $' + formatNum(rounded / 16100, 2) + ' USD est.';
+
+  const rateDisplay = pair.rate >= 1 ? formatNum(pair.rate, 0) : pair.rate.toFixed(8);
+  sr.textContent = rateDisplay;
+  sf.textContent = formatNum(fee, pair.precision) + ' ' + state.from;
+  smin.textContent = formatNum(pair.min) + ' ' + state.from;
+  smax.textContent = formatNum(pair.max) + ' ' + state.from;
+
+  // Progress bar
+  const pct = Math.min((rawAmount / pair.max) * 100, 100);
+  pb.style.width = Math.max(pct, 2) + '%';
+  pl.textContent = formatNum(rawAmount) + ' / ' + formatNum(pair.max) + ' ' + state.from;
+}
+
+/* ─── Interactions ────────────────────────────────────────── */
+function setAmount(val) {
+  document.getElementById('amountInput').value = val;
+  recalculate();
+}
+
+function selectCat(el) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectAsset(el, code, cls, symbol) {
+  document.querySelectorAll('.asset-list-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.to = code;
+  recalculate();
+}
+
+function swapPair() {
+  [state.from, state.to] = [state.to, state.from];
+  recalculate();
+  showToast('⇄', 'Pasangan ditukar');
+}
+
+/* ─── Dropdown ────────────────────────────────────────────── */
+function openDropdown(target) {
+  dropdownTarget = target;
+  const overlay = document.getElementById('dropdownOverlay');
+  const title   = document.getElementById('dropdownTitle');
+  const search  = document.getElementById('dropdownSearch');
+  title.textContent = target === 'from' ? 'Pilih Aset Kirim' : 'Pilih Aset Terima';
+  renderDropdownList('');
+  search.value = '';
+  overlay.classList.add('open');
+  setTimeout(() => search.focus(), 300);
+}
+
+function closeDropdown(e) {
+  document.getElementById('dropdownOverlay').classList.remove('open');
+}
+
+function filterDropdown(q) {
+  renderDropdownList(q.toLowerCase());
+}
+
+function renderDropdownList(q) {
+  const list = document.getElementById('dropdownList');
+  const filtered = assets.filter(a =>
+    a.code.toLowerCase().includes(q) || a.name.toLowerCase().includes(q)
+  );
+  list.innerHTML = filtered.map(a => `
+    <div class="dropdown-item ${a.code === (dropdownTarget === 'from' ? state.from : state.to) ? 'selected' : ''}"
+         onclick="pickAsset('${a.code}','${a.name}','${a.symbol}','${a.color}')">
+      <div class="dropdown-item-logo" style="background:${a.color}">${a.symbol}</div>
+      <div class="dropdown-item-info">
+        <div class="dropdown-item-code">${a.code}</div>
+        <div class="dropdown-item-name">${a.name}</div>
+      </div>
+      ${a.code === (dropdownTarget === 'from' ? state.from : state.to) ? '<span class="dropdown-item-check">✓</span>' : ''}
+    </div>
+  `).join('');
+}
+
+function pickAsset(code, name, symbol, color) {
+  if (dropdownTarget === 'from') {
+    state.from = code;
+    const logo = document.querySelector('.asset-logo');
+    logo.className = 'asset-logo';
+    logo.innerHTML = `<span class="asset-logo-img">${symbol}</span>`;
+    logo.style.background = color;
+    document.querySelector('.asset-code').innerHTML = `${code}`;
+    document.querySelector('.asset-name').textContent = `${name}`;
+    document.querySelector('.amount-suffix').textContent = code;
+  } else {
+    state.to = code;
+  }
+  closeDropdown();
+  recalculate();
+  showToast('✓', `${code} dipilih`);
+}
+
+/* ─── Toast ───────────────────────────────────────────────── */
+function showToast(icon, msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent  = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+/* ─── Nav tabs ────────────────────────────────────────────── */
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* ─── Init ────────────────────────────────────────────────── */
+recalculate();
+</script>
+</body>
+</html>
