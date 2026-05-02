@@ -1,6 +1,6 @@
 # MANG-CONVERT (ConvertHub)
 
-Platform konversi aset berbasis CodeIgniter 4 dengan flow transaksi manual oleh admin.
+Platform konversi asset (Curency) dengan flow transaksi manual oleh admin.
 
 ## Fitur Utama
 
